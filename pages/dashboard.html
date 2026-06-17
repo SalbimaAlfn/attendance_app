@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Dashboard</title>
+</head>
+
+<body>
+
+<div id="navbar"></div>
+
+<h1>Dashboard</h1>
+
+<script>
+fetch("components/navbar.html")
+    .then(res => res.text())
+    .then(data => {
+        document.getElementById("navbar").innerHTML = data;
+    });
+</script>
+
+    <h1>Kindergarten Attendance Dashboard</h1>
+
+    <div>
+        <h2>Total Students</h2>
+        <p id="totalStudents">0</p>
+    </div>
+
+    <div>
+        <h2>Present Today</h2>
+        <p id="presentToday">0</p>
+    </div>
+
+    <div>
+        <h2>Absent Today</h2>
+        <p id="absentToday">0</p>
+    </div>
+
+    <script src="/js/dashboard.js"></script>
+
+</body>
+
+</html>

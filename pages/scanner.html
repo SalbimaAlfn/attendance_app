@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>QR Attendance Scanner</title>
+</head>
+<body>
+
+
+    <div id="navbar"></div>
+
+<h1>Dashboard</h1>
+
+<script>
+fetch("components/navbar.html")
+    .then(res => res.text())
+    .then(data => {
+        document.getElementById("navbar").innerHTML = data;
+    });
+</script>
+    <h1>Attendance Scanner</h1>
+
+    <div id="reader"></div>
+
+    <hr>
+
+    <h2>Student Information</h2>
+
+    <div id="result">
+
+        No QR scanned yet
+
+    </div>
+
+    <script src="https://unpkg.com/html5-qrcode"></script>
+    <script src="/js/scanner.js"></script>
+
+    <h2>Manual Test</h2>
+
+<input
+    type="text"
+    id="manualCode"
+    placeholder="Enter student code"
+>
+
+<button onclick="manualScan()">
+    Scan
+</button>
+</body>
+</html>

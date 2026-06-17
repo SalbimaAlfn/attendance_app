@@ -5,6 +5,19 @@
 </head>
 <body>
 
+
+    <div id="navbar"></div>
+
+<h1>Dashboard</h1>
+
+<script>
+fetch("components/navbar.html")
+    .then(res => res.text())
+    .then(data => {
+        document.getElementById("navbar").innerHTML = data;
+    });
+</script>
+
     <h1>Edit Student</h1>
 
     <form id="editForm">
