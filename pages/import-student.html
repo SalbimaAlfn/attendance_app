@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Import Students</title>
+</head>
+<body>
+
+<h1>Import Students</h1>
+
+<form
+    action="/import-student"
+    method="POST"
+    enctype="multipart/form-data"
+>
+
+    <input
+        type="file"
+        name="excelFile"
+        accept=".xlsx,.xls"
+        required
+    >
+
+    <button type="submit">
+        Import
+    </button>
+
+</form>
+
+</body>
+</html>
