@@ -441,15 +441,41 @@ app.post("/api/attendance/scan", (req, res) => {
                     today
                 ],
                 (err, attendance) => {
+if (attendance) {
 
-                    if (attendance) {
+    return db.all(
+        `
+        SELECT
+            item_types.item_name,
+            student_items.item_label,
+            student_items.status
+        FROM student_items
 
-                        return res.json({
-                            alreadyPresent: true,
-                            student
-                        });
+        JOIN item_types
+        ON student_items.item_type_id =
+        item_types.id
 
-                    }
+        WHERE student_items.student_id = ?
+        `,
+        [student.id],
+        (err, items) => {
+
+            if (err) {
+                return res.status(500).json({
+                    error: err.message
+                });
+            }
+
+            return res.json({
+                alreadyPresent: true,
+                student,
+                items
+            });
+
+        }
+    );
+
+}
 
                     const now =
                         new Date();
@@ -483,10 +509,37 @@ app.post("/api/attendance/scan", (req, res) => {
                                 });
                             }
 
-                            res.json({
-                                success: true,
-                                student
-                            });
+        db.all(
+    `
+    SELECT
+        item_types.item_name,
+        student_items.item_label,
+        student_items.status
+    FROM student_items
+
+    JOIN item_types
+    ON student_items.item_type_id =
+    item_types.id
+
+    WHERE student_items.student_id = ?
+    `,
+    [student.id],
+    (err, items) => {
+
+        if (err) {
+            return res.status(500).json({
+                error: err.message
+            });
+        }
+
+        res.json({
+            success: true,
+            student,
+            items
+        });
+
+    }
+);
 
                         }
                     );
@@ -507,6 +560,82 @@ app.get("/dashboard", (req, res) => {
             "pages",
             "dashboard.html"
         )
+    );
+
+});
+
+app.get("/api/dashboard", (req, res) => {
+
+    const today =
+        new Date()
+        .toISOString()
+        .split("T")[0];
+
+    db.get(
+        `
+        SELECT COUNT(*) AS totalStudents
+        FROM students
+        `,
+        [],
+        (err, studentsResult) => {
+
+            db.get(
+                `
+                SELECT COUNT(*) AS presentToday
+                FROM attendance
+                WHERE attendance_date = ?
+                `,
+                [today],
+                (err, attendanceResult) => {
+
+                    db.get(
+                        `
+                        SELECT COUNT(*) AS lostItems
+                        FROM student_items
+                        WHERE status = 'Lost'
+                        `,
+                        [],
+                        (err, lostResult) => {
+
+                            db.get(
+                                `
+                                SELECT COUNT(*) AS damagedItems
+                                FROM student_items
+                                WHERE status = 'Damaged'
+                                `,
+                                [],
+                                (err, damagedResult) => {
+
+                                    res.json({
+
+                                        totalStudents:
+                                            studentsResult.totalStudents,
+
+                                        presentToday:
+                                            attendanceResult.presentToday,
+
+                                        absentToday:
+                                            studentsResult.totalStudents -
+                                            attendanceResult.presentToday,
+
+                                        lostItems:
+                                            lostResult.lostItems,
+
+                                        damagedItems:
+                                            damagedResult.damagedItems
+
+                                    });
+
+                                }
+                            );
+
+                        }
+                    );
+
+                }
+            );
+
+        }
     );
 
 });
@@ -620,6 +749,183 @@ app.get("/api/dashboard", (req, res) => {
 
 });
 
+app.get("/api/items", (req, res) => {
+
+    db.all(
+        `
+        SELECT *
+        FROM item_types
+        ORDER BY item_name ASC
+        `,
+        [],
+        (err, rows) => {
+
+            if (err) {
+
+                return res.status(500).json({
+                    error: err.message
+                });
+
+            }
+
+            res.json(rows);
+
+        }
+    );
+
+});
+
+app.post("/api/items", (req, res) => {
+
+    const item_name =
+    req.body.item_name.trim();
+
+const description =
+    req.body.description.trim();
+
+    db.run(
+        `
+        INSERT INTO item_types
+        (
+            item_name,
+            description
+        )
+        VALUES (?, ?)
+        `,
+        [
+            item_name,
+            description
+        ],
+        function(err) {
+
+            if (err) {
+
+                return res.status(500).json({
+                    error: err.message
+                });
+
+            }
+
+            res.json({
+                message:
+                    "Item added successfully"
+            });
+
+        }
+    );
+
+});
+
+app.get("/student-items/:id", (req, res) => {
+
+    res.sendFile(
+        path.join(
+            __dirname,
+            "pages",
+            "student-items.html"
+        )
+    );
+
+});
+
+app.get("/items", (req, res) => {
+
+    res.sendFile(
+        path.join(
+            __dirname,
+            "pages",
+            "items.html"
+        )
+    );
+
+});
+
+app.post("/api/student-items", (req, res) => {
+
+    const {
+        student_id,
+        item_type_id,
+        item_label
+    } = req.body;
+
+    db.run(
+        `
+        INSERT INTO student_items
+        (
+            student_id,
+            item_type_id,
+            item_label
+        )
+        VALUES (?, ?, ?)
+        `,
+        [
+            student_id,
+            item_type_id,
+            item_label
+        ],
+        function(err) {
+
+            if (err) {
+
+                return res.status(500).json({
+                    error: err.message
+                });
+
+            }
+
+            res.json({
+                message:
+                    "Item assigned successfully"
+            });
+
+        }
+    );
+
+});
+
+app.get(
+    "/api/student-items/:studentId",
+    (req, res) => {
+
+        const studentId =
+            req.params.studentId;
+
+        db.all(
+            `
+            SELECT
+                student_items.id,
+                item_types.item_name,
+                student_items.item_label,
+                student_items.status
+            FROM student_items
+
+            JOIN item_types
+            ON student_items.item_type_id =
+               item_types.id
+
+            WHERE student_items.student_id = ?
+
+            ORDER BY student_items.id DESC
+            `,
+            [studentId],
+            (err, rows) => {
+
+                if (err) {
+
+                    return res.status(500).json({
+                        error: err.message
+                    });
+
+                }
+
+                res.json(rows);
+
+            }
+        );
+
+    }
+);
+
 app.get("/api/attendance/export", (req, res) => {
 
     const date = req.query.date;
@@ -701,6 +1007,87 @@ res.download(
     );
 
 });
+
+app.post("/api/student-items", (req, res) => {
+    console.log("POST route reached");
+    res.json({ message: "POST works" });
+});
+
+app.put(
+    "/api/student-items/:id",
+    (req, res) => {
+
+        const id =
+            req.params.id;
+
+        const {
+            status
+        } = req.body;
+
+        db.run(
+            `
+            UPDATE student_items
+            SET status = ?
+            WHERE id = ?
+            `,
+            [
+                status,
+                id
+            ],
+            function(err) {
+
+                if (err) {
+
+                    return res.status(500).json({
+                        error: err.message
+                    });
+
+                }
+
+                res.json({
+                    message:
+                        "Status updated"
+                });
+
+            }
+        );
+
+    }
+);
+
+app.delete(
+    "/api/student-items/:id",
+    (req, res) => {
+
+        const id =
+            req.params.id;
+
+        db.run(
+            `
+            DELETE FROM student_items
+            WHERE id = ?
+            `,
+            [id],
+            function(err) {
+
+                if (err) {
+
+                    return res.status(500).json({
+                        error: err.message
+                    });
+
+                }
+
+                res.json({
+                    message:
+                        "Item deleted successfully"
+                });
+
+            }
+        );
+
+    }
+);
 
 app.listen(3000, () => {
     console.log("Server running on http://localhost:3000")

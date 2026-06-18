@@ -21,43 +21,79 @@ function onScanSuccess(decodedText) {
             document.getElementById(
                 "result"
             );
+        let itemsHtml = `
+    <h4>Items</h4>
+    <ul>
+`;
+
+data.items.forEach(item => {
+
+    const icon =
+        item.status === "Owned"
+            ? "🟢"
+            : "🔴";
+
+    itemsHtml += `
+        <li>
+            ${icon}
+            ${item.item_name}
+
+            ${
+                item.item_label
+                    ? `- ${item.item_label}`
+                    : ""
+            }
+
+            (${item.status})
+        </li>
+    `;
+
+});
+
+itemsHtml += `
+    </ul>
+`;    
 
         if (
             data.alreadyPresent
         ) {
 
             result.innerHTML = `
-                <h3>
-                    Already Present Today
-                </h3>
+    <h3>
+        Already Present Today
+    </h3>
 
-                <p>
-                    ${data.student.name}
-                </p>
+    <p>
+        ${data.student.name}
+    </p>
 
-                <p>
-                    Class:
-                    ${data.student.class_name}
-                </p>
-            `;
+    <p>
+        Class:
+        ${data.student.class_name}
+    </p>
+
+    ${itemsHtml}
+`;
 
             return;
         }
 
         result.innerHTML = `
-            <h3>
-                Attendance Saved
-            </h3>
+    <h3>
+        Attendance Saved
+    </h3>
 
-            <p>
-                ${data.student.name}
-            </p>
+    <p>
+        ${data.student.name}
+    </p>
 
-            <p>
-                Class:
-                ${data.student.class_name}
-            </p>
-        `;
+    <p>
+        Class:
+        ${data.student.class_name}
+    </p>
+
+    ${itemsHtml}
+`;
 
     });
 

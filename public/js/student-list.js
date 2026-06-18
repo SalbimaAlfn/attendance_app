@@ -41,11 +41,25 @@ async function loadStudents(search = "") {
         Delete
     </button>
 
+
+<button
+    onclick="manageItems(${student.id})"
+>
+    Items
+</button>
+
 </td>
     </tr>
 `;
 
     });
+
+}
+
+function manageItems(id) {
+
+    window.location.href =
+        `/student-items/${id}`;
 
 }
 

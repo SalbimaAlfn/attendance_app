@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Item Types</title>
+</head>
+
+<body>
+
+    <div id="navbar"></div>
+
+    <h1>Item Types</h1>
+
+    <form id="itemForm">
+
+        <input
+            type="text"
+            id="item_name"
+            placeholder="Item Name"
+            required
+        >
+
+        <input
+            type="text"
+            id="description"
+            placeholder="Description"
+        >
+
+        <button type="submit">
+            Add Item
+        </button>
+
+    </form>
+
+    <br>
+
+    <table border="1">
+
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Item Name</th>
+                <th>Description</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+
+        <tbody id="itemTable">
+        </tbody>
+
+    </table>
+
+    <script src="/js/layout.js"></script>
+    <script src="/js/items.js"></script>
+
+</body>
+</html>

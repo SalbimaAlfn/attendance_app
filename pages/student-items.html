@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Student Items</title>
+</head>
+
+<body>
+
+    <div id="navbar"></div>
+
+    <h1>Student Items</h1>
+
+    <h2 id="studentName">
+        Loading...
+    </h2>
+
+    <select id="itemSelect">
+    </select>
+
+    <input
+        type="text"
+        id="itemLabel"
+        placeholder="Item Label"
+    >
+
+    <button onclick="addItem()">
+        Add Item
+    </button>
+
+    <hr>
+
+    <table border="1">
+
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Item Type</th>
+                <th>Label</th>
+                <th>Status</th>
+            </tr>
+        </thead>
+
+        <tbody id="itemsTable">
+        </tbody>
+
+    </table>
+
+    <script src="/js/layout.js"></script>
+    <script src="/js/student-items.js"></script>
+
+</body>
+</html>

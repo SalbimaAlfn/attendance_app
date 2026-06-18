@@ -7,35 +7,21 @@
 
 <body>
 
-<div id="navbar"></div>
+    <div id="navbar"></div>
 
-<h1>Dashboard</h1>
+    <h1>Dashboard</h1>
 
-<script>
-fetch("components/navbar.html")
-    .then(res => res.text())
-    .then(data => {
-        document.getElementById("navbar").innerHTML = data;
-    });
-</script>
+    <h2 id="totalStudents">0</h2>
 
-    <h1>Kindergarten Attendance Dashboard</h1>
+    <h2 id="presentToday">0</h2>
 
-    <div>
-        <h2>Total Students</h2>
-        <p id="totalStudents">0</p>
-    </div>
+    <h2 id="absentToday">0</h2>
 
-    <div>
-        <h2>Present Today</h2>
-        <p id="presentToday">0</p>
-    </div>
+    <h2 id="lostItems">0</h2>
 
-    <div>
-        <h2>Absent Today</h2>
-        <p id="absentToday">0</p>
-    </div>
+    <h2 id="damagedItems">0</h2>
 
+    <script src="/js/layout.js"></script>
     <script src="/js/dashboard.js"></script>
 
 </body>
