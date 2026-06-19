@@ -21,9 +21,18 @@ async function loadItems() {
                 <td>${item.item_name}</td>
                 <td>${item.description || ""}</td>
                 <td>
-                    Edit |
-                    Delete
-                </td>
+    <button
+        onclick="editItem(${item.id})"
+    >
+        Edit
+    </button>
+
+    <button
+        onclick="deleteItem(${item.id})"
+    >
+        Delete
+    </button>
+</td>
             </tr>
         `;
 
@@ -84,3 +93,63 @@ document
 
         }
     );
+
+    async function deleteItem(id) {
+
+    const confirmDelete =
+        confirm("Delete this item type?");
+
+    if (!confirmDelete) {
+        return;
+    }
+
+    const response =
+        await fetch(
+            `/api/items/${id}`,
+            {
+                method: "DELETE"
+            }
+        );
+
+    const result =
+        await response.json();
+
+    alert(result.message);
+
+    loadItems();
+
+}
+async function editItem(id) {
+
+    const newName =
+        prompt("New item name:");
+
+    if (!newName) {
+        return;
+    }
+
+    const response =
+        await fetch(
+            `/api/items/${id}`,
+            {
+                method: "PUT",
+                headers: {
+                    "Content-Type":
+                        "application/json"
+                },
+                body:
+                    JSON.stringify({
+                        item_name:
+                            newName
+                    })
+            }
+        );
+
+    const result =
+        await response.json();
+
+    alert(result.message);
+
+    loadItems();
+
+}

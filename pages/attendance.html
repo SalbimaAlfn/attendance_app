@@ -3,6 +3,14 @@
 <head>
     <title>Attendance History</title>
 </head>
+<label>
+    Filter Date:
+</label>
+
+<input
+    type="date"
+    id="attendanceDate"
+>
 
 <body>
 
@@ -31,6 +39,11 @@
 
 <button onclick="exportAttendance()">
     Export Attendance Excel
+</button>
+
+<br><br>
+<button onclick="clearFilter()">
+    Show All
 </button>
 
 <br><br>

@@ -692,6 +692,147 @@ app.get("/api/attendance", (req, res) => {
 
 });
 
+app.get("/export-student-items", (req, res) => {
+
+    db.all(
+        `
+        SELECT
+            students.student_code,
+            students.name,
+            students.class_name,
+            item_types.item_name,
+            student_items.item_label,
+            student_items.status
+
+        FROM student_items
+
+        JOIN students
+        ON student_items.student_id =
+           students.id
+
+        JOIN item_types
+        ON student_items.item_type_id =
+           item_types.id
+
+        ORDER BY students.name ASC
+        `,
+        [],
+        (err, rows) => {
+
+            if (err) {
+                return res.status(500).json({
+                    error: err.message
+                });
+            }
+
+            const workbook =
+                XLSX.utils.book_new();
+
+            const worksheet =
+                XLSX.utils.json_to_sheet(rows);
+
+            XLSX.utils.book_append_sheet(
+                workbook,
+                worksheet,
+                "Student Items"
+            );
+
+            const buffer =
+                XLSX.write(
+                    workbook,
+                    {
+                        type: "buffer",
+                        bookType: "xlsx"
+                    }
+                );
+
+            res.setHeader(
+                "Content-Disposition",
+                "attachment; filename=student-items.xlsx"
+            );
+
+            res.setHeader(
+                "Content-Type",
+                "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+            );
+
+            res.send(buffer);
+
+        }
+    );
+
+});
+
+app.delete("/api/items/:id", (req, res) => {
+
+    const id =
+        req.params.id;
+
+    db.run(
+        `
+        DELETE FROM item_types
+        WHERE id = ?
+        `,
+        [id],
+        function(err) {
+
+            if (err) {
+
+                return res.status(500).json({
+                    error: err.message
+                });
+
+            }
+
+            res.json({
+                message:
+                    "Item type deleted successfully"
+            });
+
+        }
+    );
+
+});
+
+app.put("/api/items/:id", (req, res) => {
+
+    const id =
+        req.params.id;
+
+    const {
+        item_name
+    } = req.body;
+
+    db.run(
+        `
+        UPDATE item_types
+        SET item_name = ?
+        WHERE id = ?
+        `,
+        [
+            item_name,
+            id
+        ],
+        function(err) {
+
+            if (err) {
+
+                return res.status(500).json({
+                    error: err.message
+                });
+
+            }
+
+            res.json({
+                message:
+                    "Item type updated successfully"
+            });
+
+        }
+    );
+
+});
+
 app.get("/api/dashboard", (req, res) => {
 
     const today =
