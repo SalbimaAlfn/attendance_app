@@ -1042,7 +1042,7 @@ app.get(
 
             JOIN item_types
             ON student_items.item_type_id =
-               item_types.id
+            item_types.id
 
             WHERE student_items.student_id = ?
 
