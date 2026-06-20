@@ -4,6 +4,7 @@ const multer = require("multer");
 const XLSX = require("xlsx");
 const QRCode = require("qrcode");
 const fs = require("fs");
+const cron = require("node-cron");
 
 
 const upload = multer ({
@@ -24,6 +25,55 @@ const db =
                 console.log(err.message);
             } else {
     console.log("Database Connected");
+
+function createBackup() {
+
+    const date =
+    new Date()
+        .toISOString()
+        .replace(/[:.]/g, "-");
+
+    const source =
+        "./database/db_attendance.db";
+
+    const destination =
+        `./backupDB/backup_${date}.db`;
+
+    fs.copyFile(
+        source,
+        destination,
+        (err) => {
+
+            if (err) {
+
+                console.log(
+                    "Backup Error:",
+                    err
+                );
+
+            } else {
+
+                console.log(
+                    "Backup Created:",
+                    destination
+                );
+
+            }
+
+        }
+    );
+
+}
+
+cron.schedule(
+    "0 0 * * 0",
+    () => {
+
+        createBackup();
+
+    }
+);
+
 
     db.all(
         "SELECT name FROM sqlite_master WHERE type='table'",
@@ -1195,6 +1245,8 @@ app.put(
 
     }
 );
+
+
 
 app.delete(
     "/api/student-items/:id",
