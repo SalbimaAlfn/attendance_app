@@ -7,6 +7,11 @@ const fs = require("fs");
 const cron = require("node-cron");
 
 
+const restoreUpload =
+    multer({
+        dest: "uploads/"
+    });
+
 const upload = multer ({
     dest : "uploads/"
 });
@@ -97,6 +102,62 @@ cron.schedule(
 app.use(express.static("public"));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true}));
+
+app.post(
+    "/api/restore-database",
+    restoreUpload.single(
+        "backup"
+    ),
+    (req, res) => {
+
+        const uploadedFile =
+            req.file.path;
+
+        const databaseFile =
+            "./database/db_attendance.db";
+
+        fs.copyFile(
+            uploadedFile,
+            databaseFile,
+            (err) => {
+
+                if (err) {
+
+                    return res.status(500).json({
+                        error: err.message
+                    });
+
+                }
+
+                fs.unlinkSync(
+                    uploadedFile
+                );
+
+                res.json({
+                    message:
+                        "Database restored successfully. Restart server."
+                });
+
+            }
+        );
+
+    }
+);
+
+app.get(
+    "/restore",
+    (req, res) => {
+
+        res.sendFile(
+            path.join(
+                __dirname,
+                "public",
+                "restore.html"
+            )
+        );
+
+    }
+);
 
 app.post("/students", (req, res) => {
 
@@ -1281,7 +1342,13 @@ app.delete(
 
     }
 );
+const PORT =
+    process.env.PORT || 3000;
 
-app.listen(3000, () => {
-    console.log("Server running on http://localhost:3000")
+app.listen(PORT, () => {
+
+    console.log(
+        `Server running on port ${PORT}`
+    );
+
 });

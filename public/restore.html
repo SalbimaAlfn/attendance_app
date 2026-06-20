@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Restore Database</title>
+</head>
+<body>
+
+<h2>Restore Database</h2>
+
+<form
+    id="restoreForm"
+    enctype="multipart/form-data"
+>
+
+    <input
+        type="file"
+        id="backupFile"
+        accept=".db"
+        required
+    >
+
+    <button type="submit">
+        Restore
+    </button>
+
+</form>
+
+<script src="/js/restore.js"></script>
+
+</body>
+</html>
