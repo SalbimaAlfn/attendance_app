@@ -1,31 +1,45 @@
 <!DOCTYPE html>
 <html>
 <head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Restore Database</title>
+    <link rel="stylesheet" href="/css/style.css">
 </head>
 <body>
 
-<h2>Restore Database</h2>
+<div id="navbar"></div>
 
-<form
-    id="restoreForm"
-    enctype="multipart/form-data"
->
+<main class="tool-shell">
+    <section class="tool-panel">
+        <p class="eyebrow">Database Tools</p>
+        <h1>Restore Database</h1>
+        <p class="auth-copy">
+            Upload a saved `.db` backup to replace the current attendance database.
+        </p>
 
-    <input
-        type="file"
-        id="backupFile"
-        accept=".db"
-        required
-    >
+        <form
+            id="restoreForm"
+            enctype="multipart/form-data"
+        >
 
-    <button type="submit">
-        Restore
-    </button>
+            <input
+                type="file"
+                id="backupFile"
+                accept=".db"
+                required
+            >
 
-</form>
+            <button type="submit">
+                Restore
+            </button>
 
+        </form>
+    </section>
+</main>
+
+<script src="/js/layout.js"></script>
 <script src="/js/restore.js"></script>
+<script src="/js/auth.js"></script>
 
 </body>
 </html>

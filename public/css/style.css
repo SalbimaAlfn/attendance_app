@@ -96,6 +96,12 @@ nav a {
     transition: background 160ms ease, color 160ms ease, box-shadow 160ms ease;
 }
 
+nav button {
+    min-height: 40px;
+    padding: 9px 13px;
+    box-shadow: none;
+}
+
 nav a:hover,
 nav a:focus-visible {
     color: var(--purple-700);
@@ -121,6 +127,22 @@ h1::after {
     background: var(--accent);
     border-radius: 999px;
     content: "";
+}
+
+.eyebrow {
+    width: auto;
+    margin: 0 0 10px;
+    color: var(--purple-700);
+    font-size: 0.78rem;
+    font-weight: 800;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+}
+
+.auth-copy {
+    width: auto;
+    margin: 0 0 22px;
+    color: var(--muted);
 }
 
 h2,
@@ -325,6 +347,89 @@ body > h2[id] {
     padding: 18px;
 }
 
+body > #totalStudents,
+body > #presentToday,
+body > #absentToday,
+body > #lostItems,
+body > #damagedItems {
+    display: inline-flex;
+    align-items: center;
+    min-height: 104px;
+    width: calc((min(1120px, calc(100% - 32px)) - 24px) / 3);
+    margin: 8px 4px;
+    padding: 20px;
+    background:
+        linear-gradient(135deg, rgba(255, 255, 255, 0.96), rgba(245, 243, 255, 0.88)),
+        var(--surface-solid);
+    border: 1px solid rgba(124, 58, 237, 0.12);
+    font-size: 1.05rem;
+}
+
+body > #totalStudents::before,
+body > #presentToday::before,
+body > #absentToday::before,
+body > #lostItems::before,
+body > #damagedItems::before {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex: 0 0 42px;
+    width: 42px;
+    height: 42px;
+    margin-right: 12px;
+    color: #ffffff;
+    background: var(--accent);
+    border-radius: 8px;
+    box-shadow: 0 10px 22px rgba(37, 99, 235, 0.20);
+    content: "";
+}
+
+.auth-page {
+    display: grid;
+    min-height: 100vh;
+    place-items: center;
+    padding: 24px;
+}
+
+.auth-page > * {
+    width: auto;
+}
+
+.auth-shell,
+.tool-shell {
+    width: min(100%, 460px);
+}
+
+.tool-shell {
+    margin-top: 30px;
+}
+
+.auth-panel,
+.tool-panel {
+    padding: 28px;
+    background:
+        linear-gradient(135deg, rgba(255, 255, 255, 0.96), rgba(239, 246, 255, 0.88)),
+        var(--surface-solid);
+    border: 1px solid rgba(124, 58, 237, 0.14);
+    border-radius: 8px;
+    box-shadow: var(--shadow);
+}
+
+.auth-panel h1,
+.tool-panel h1 {
+    margin-top: 0;
+}
+
+.auth-panel form,
+.tool-panel form {
+    width: 100%;
+    margin: 0;
+    background: transparent;
+    border: 0;
+    box-shadow: none;
+    padding: 0;
+}
+
 hr {
     height: 1px;
     margin: 24px auto;
@@ -357,6 +462,12 @@ br {
         font-size: 0.88rem;
     }
 
+    nav button {
+        min-height: 38px;
+        padding: 8px 11px;
+        font-size: 0.88rem;
+    }
+
     h1 {
         margin-top: 22px;
         margin-bottom: 14px;
@@ -364,6 +475,26 @@ br {
 
     form {
         padding: 16px;
+    }
+
+    body > #totalStudents,
+    body > #presentToday,
+    body > #absentToday,
+    body > #lostItems,
+    body > #damagedItems {
+        width: min(100% - 20px, 420px);
+        min-height: 78px;
+        margin: 7px auto;
+        padding: 16px;
+    }
+
+    .auth-page {
+        padding: 14px;
+    }
+
+    .auth-panel,
+    .tool-panel {
+        padding: 22px;
     }
 
     table {

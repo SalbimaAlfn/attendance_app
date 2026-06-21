@@ -159,6 +159,30 @@ app.get(
     }
 );
 
+app.get(
+    "/backup-database",
+    (req, res) => {
+
+        const databaseFile =
+            path.join(
+                __dirname,
+                "database",
+                "db_attendance.db"
+            );
+
+        const fileName =
+            `db_attendance_backup_${new Date()
+                .toISOString()
+                .split("T")[0]}.db`;
+
+        res.download(
+            databaseFile,
+            fileName
+        );
+
+    }
+);
+
 app.post("/students", (req, res) => {
 
     const {
@@ -213,7 +237,7 @@ app.get("/scanner", (req, res) => {
 });
 
 app.get("/", (req, res) => {
-    res.sendFile(path.join(__dirname, "pages", "index.html"));
+    res.sendFile(path.join(__dirname, "pages", "dashboard.html"));
 });
 app.get("/students", (req, res) => {
     res.sendFile(path.join(__dirname, "pages", "students.html"));
@@ -1307,7 +1331,68 @@ app.put(
     }
 );
 
+app.get(
+    "/login",
+    (req, res) => {
 
+        res.sendFile(
+            path.join(
+                __dirname,
+                "pages",
+                "login.html"
+            )
+        );
+
+    }
+);
+
+app.post(
+    "/api/login",
+    (req, res) => {
+
+        const {
+            username,
+            password
+        } = req.body;
+
+        db.get(
+            `
+            SELECT *
+            FROM users
+            WHERE username = ?
+            AND password = ?
+            `,
+            [
+                username,
+                password
+            ],
+            (err, user) => {
+
+                if (err) {
+
+                    return res.status(500).json({
+                        error: err.message
+                    });
+
+                }
+
+                if (!user) {
+
+                    return res.json({
+                        success: false
+                    });
+
+                }
+
+                res.json({
+                    success: true
+                });
+
+            }
+        );
+
+    }
+);
 
 app.delete(
     "/api/student-items/:id",
